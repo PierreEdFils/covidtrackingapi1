@@ -1,6 +1,10 @@
 package com.careerdevs.covidtrackingapi.controllers;
 
 
+import com.careerdevs.covidtrackingapi.models.CovidTracking;
+import com.careerdevs.covidtrackingapi.models.CovidTrackingGlobalData;
+import com.careerdevs.covidtrackingapi.models.CovidTrackingRegionalDataByCountry;
+import com.careerdevs.covidtrackingapi.models.CovidTrackingReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -19,7 +23,7 @@ import java.util.List;
 public class CovidTrackingController {
 
 
-    private Environment env;
+//    private Environment env;
 
     private final String BASE_URL ="https://www.cyberpurge.com/api/covid/";
     @Value("${CV_API_KEY}")
@@ -33,9 +37,10 @@ public class CovidTrackingController {
     @GetMapping("/country/{countryName}")
     public ResponseEntity<?> getCovidTrackingByCountries (RestTemplate restTemplate, @PathVariable String countryName) {
 
+//        System.out.println(countryName);
         try{
 //            String apiKey = env.getProperty("CV_API_KEY");
-
+//            countryName = "QA";
             String queryString =  "countryNameByCode/" + countryName;
             String covidTrackingURL = BASE_URL + queryString;
             System.out.println(covidTrackingURL);
@@ -48,8 +53,9 @@ public class CovidTrackingController {
                 final HttpEntity<String> entity = new HttpEntity<String>(headers);
 
                 //Execute the method writing your HttpEntity to the request
-                ResponseEntity<String> response = restTemplate.exchange(covidTrackingURL, HttpMethod.GET, entity, String.class);
+                ResponseEntity<CovidTracking> response = restTemplate.exchange(covidTrackingURL, HttpMethod.GET, entity,CovidTracking.class);
 
+//                CovidTrackingReport report = new CovidTrackingReport()
 
             return ResponseEntity.ok(response.getBody());
 
@@ -199,7 +205,7 @@ public class CovidTrackingController {
             final HttpEntity<String> entity = new HttpEntity<String>(headers);
 
             //Execute the method writing your HttpEntity to the request
-            ResponseEntity<String> response = restTemplate.exchange(covidTrackingURL, HttpMethod.GET, entity, String.class);
+            ResponseEntity<CovidTrackingGlobalData> response = restTemplate.exchange(covidTrackingURL, HttpMethod.GET, entity, CovidTrackingGlobalData.class);
 
 
             return ResponseEntity.ok(response.getBody());
@@ -377,7 +383,7 @@ public class CovidTrackingController {
             final HttpEntity<String> entity = new HttpEntity<String>(headers);
 
             //Execute the method writing your HttpEntity to the request
-            ResponseEntity<String> response = restTemplate.exchange(covidTrackingURL, HttpMethod.GET, entity, String.class);
+            ResponseEntity<CovidTrackingRegionalDataByCountry>  response = restTemplate.exchange(covidTrackingURL, HttpMethod.GET, entity, CovidTrackingRegionalDataByCountry.class);
 
 
             return ResponseEntity.ok(response.getBody());
